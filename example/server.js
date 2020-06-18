@@ -4,18 +4,16 @@ const webpack = require("webpack");
 const webpackDevMiddleware = require("webpack-dev-middleware");
 const webpackHotMiddleware = require("webpack-hot-middleware");
 const webpackConfig = require("./webpack.config");
-
-const app = express(); 
+const app = express();
 const compiler = webpack(webpackConfig);
-
+console.log(webpackConfig);
 app.use(webpackDevMiddleware(compiler, {
-  publicPath: webpackConfig.output.publicPath,
+  publicPath: "/__build__/",
   stats: {
     colors: true, // Tells stats whether to output in the different colors.
     chunks: true
   }
 }));
-
 app.use(webpackHotMiddleware(compiler));
 app.use(express.static(__dirname));
 app.use(bodyParser.json());

@@ -27,7 +27,7 @@ module.exports = {
           }
         ]
       }, {
-        test: /\.tsx$/,
+        test: /\.ts$/,
         use: [
           {
             loader: 'ts-loader',
@@ -42,8 +42,8 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js']
   },
-  plugin: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+  plugins: [
+    new webpack.HotModuleReplacementPlugin({}),
+    new webpack.NoEmitOnErrorsPlugin({})
   ]
 }
