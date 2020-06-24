@@ -14,7 +14,7 @@ export type Method =
   | 'delete'
   | 'DELETE'
 
-
+// axios中的公共方法
 export interface Axios{
   request(config: AxiosRequestConfig): AxiosPromise;
   get(url: string, config?: AxiosRequestConfig): AxiosPromise;
@@ -31,7 +31,7 @@ export interface AxiosInstance extends Axios{
 }
 
 export interface AxiosRequestConfig {
-  url: string
+  url?: string
   method: string
   data?: any
   params?: any
