@@ -16,6 +16,10 @@ export type Method =
 
 // axios中的公共方法
 export interface Axios{
+  interceptors: {
+    request: AxiosInterceptorManger<AxiosRequestConfig>,
+    response: AxiosInterceptorManger<AxiosResponse>
+  };
   request<T=any>(config: AxiosRequestConfig): AxiosPromise<T>;
   get<T=any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>;
   head<T=any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>;
@@ -58,5 +62,17 @@ export interface AxiosError extends Error {
   code?: string | null
   request?: any
   response?: AxiosResponse
+}
+
+export interface AxiosInterceptorManger<T> {
+  use(resolved: ResolvedFn<T>, reject?: RejectedFn): number;
+  eject(id: number): void;
+}
+export interface ResolvedFn<T>{
+  (val: T): T | Promise<T>
+}
+
+export interface RejectedFn{
+  (error: any): any
 }
 

@@ -60,3 +60,6 @@ axios.head('/extend/head')
 axios.post('/extend/post', {msg: 'post'})
 axios.post('/extend/put', {msg: 'put'})
 axios.post('/extend/patch', {msg: 'patch'})
+
+let num: number = null;
+console.log(num);

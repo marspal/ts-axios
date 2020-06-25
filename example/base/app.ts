@@ -96,7 +96,8 @@ const searchParams = new URLSearchParams(paramsString)
 axios({
   method: "post",
   url: "/base/post",
-  data: searchParams
+  data: searchParams,
+
 });
 
 axios({
