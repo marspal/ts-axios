@@ -46,6 +46,8 @@ export interface AxiosRequestConfig {
   headers?: any
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+  transformRequest?: AxiosTransformer | AxiosTransformer[]
+  transformResponse?: AxiosTransformer | AxiosTransformer[]
   [proName: string]: any
 }
 
@@ -101,4 +103,8 @@ export function deepMerge(...objs: any[]): any {
     }
   })
   return result;
+}
+
+export interface AxiosTransformer{
+  (data: any, headers?: any): any
 }
