@@ -1,3 +1,5 @@
+import { isPlainObject } from "../helpers/util";
+
 export type Method =
   | 'get'
   | 'GET'
@@ -16,6 +18,7 @@ export type Method =
 
 // axios中的公共方法
 export interface Axios{
+  defaults: AxiosRequestConfig;
   interceptors: {
     request: AxiosInterceptorManger<AxiosRequestConfig>,
     response: AxiosInterceptorManger<AxiosResponse>
@@ -37,12 +40,13 @@ export interface AxiosInstance extends Axios{
 
 export interface AxiosRequestConfig {
   url?: string
-  method: string
+  method?: Method
   data?: any
   params?: any
   headers?: any
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+  [proName: string]: any
 }
 
 export interface AxiosResponse<T = any> {
@@ -76,3 +80,25 @@ export interface RejectedFn{
   (error: any): any
 }
 
+
+export function deepMerge(...objs: any[]): any {
+  const result = Object.create(null)
+
+  objs.forEach(obj => {
+    if(obj){
+      Object.keys(obj).forEach(key => {
+        const val = obj[key];
+        if(isPlainObject(val)){
+          if(isPlainObject(result[key])){
+            result[key] = deepMerge(result[key], val)
+          }else{
+            result[key] = deepMerge(val);
+          }
+        }else{
+          result[key] = val;
+        }
+      })
+    }
+  })
+  return result;
+}
