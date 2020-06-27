@@ -51,5 +51,5 @@ export default function mergeConfig(config1: AxiosRequestConfig, config2?: Axios
     // 类型索引签名
     config[key] = strat(config1[key], config2![key])
   }
-  return config2
+  return config
 }
