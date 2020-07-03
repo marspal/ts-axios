@@ -32,6 +32,7 @@ export default class Axios {
       config = url;
     }
     config = mergeConfig(this.defaults, config)
+
     // T 可能是config response
     const chain: PromiseChain<any>[] = [{
       resolved: dispatchRequest,
@@ -66,13 +67,13 @@ export default class Axios {
     return this._requestMethodWithoutData('options', url, config);
   }
   post(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise {
-    return this._requestMethodWithData('post', url, config);
+    return this._requestMethodWithData('post', url, data, config);
   }
   put(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise {
-    return this._requestMethodWithData('put', url, config);
+    return this._requestMethodWithData('put', url, data, config);
   }
   patch(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise {
-    return this._requestMethodWithData('patch', url, config);
+    return this._requestMethodWithData('patch', url, data, config);
   }
   _requestMethodWithoutData(method: Method, url: string, config?: AxiosRequestConfig){
     return this.request(Object.assign(config || {}, {

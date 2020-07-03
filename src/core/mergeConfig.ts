@@ -4,7 +4,7 @@ import { isPlainObject } from "../helpers/util";
 const strats = Object.create(null);
 
 function defaultStrat(val1: any, val2:any):any{
-  return typeof val2 !== 'undefined'? val2 : val2;
+  return typeof val2 !== 'undefined'? val2 : val1;
 }
 function fromVal2Strat(val1: any, val2:any){
   if(typeof val2 !== 'undefined'){
