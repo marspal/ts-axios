@@ -1,4 +1,8 @@
 import { isDate, isPlainObject } from './util'
+interface URLOrigin {
+  protocol: string;
+  host: string;
+}
 function encode(val: string): string {
   return encodeURIComponent(val)
     .replace(/%40/g, '@')
@@ -45,4 +49,18 @@ export function buildURL(url: string, params?: any): string {
     url += (url.indexOf('?') !== -1 ? '&' : '?') + serializedParams
   }
   return url
+}
+
+export function isURLSameOrigin(requestURL: string): boolean{
+  const parsedOrigin = resolveURL(requestURL);
+  return (parsedOrigin.host === currentOrigin.host
+    && currentOrigin.protocol === parsedOrigin.protocol)
+}
+
+const usrParsingNode = document.createElement('a');
+const currentOrigin = resolveURL(document.location.href);
+function resolveURL(url: string): URLOrigin{
+  usrParsingNode.setAttribute("href", url);
+  const {protocol, host} = usrParsingNode;
+  return {protocol, host}
 }

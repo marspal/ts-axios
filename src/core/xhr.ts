@@ -1,10 +1,16 @@
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
 import { parseHeaders } from '../helpers/util'
 import { createError, AxiosError } from '../helpers/error'
+import { isURLSameOrigin } from '../helpers/url'
+import cookie from '../helpers/cookie'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
-    const { data = null, url, method = 'get', headers, responseType, timeout, cancelToken } = config
+    const { data = null, url, method = 'get',
+      headers, responseType, timeout,
+      cancelToken, withCredentials,
+      xsrfCookieName, xsrfHeaderName
+    } = config
     const request = new XMLHttpRequest()
     if (responseType) {
       // 设置响应数据的类型
@@ -12,6 +18,9 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     }
     if (timeout) {
       request.timeout = timeout
+    }
+    if(withCredentials){
+      request.withCredentials = withCredentials;
     }
     request.open(method.toUpperCase(), url!, true)
     request.onreadystatechange = function handleload() {
@@ -43,7 +52,12 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       // reject(new Error(`timeout of ${timeout} ms exceeded`))
       reject(createError('timeout of ${timeout} ms exceeded', config, 'ECONNABORTED', request))
     }
-
+    if((withCredentials || isURLSameOrigin(url!)) && xsrfCookieName){
+      const xsrfValue = cookie.read(xsrfCookieName);
+      if(xsrfValue && xsrfHeaderName){
+        request.setRequestHeader(xsrfHeaderName, xsrfValue)
+      }
+    }
     Object.keys(headers).forEach(name => {
       if (data === null && name.toLowerCase() === 'content-type') {
         // 删掉content-type
