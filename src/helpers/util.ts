@@ -12,27 +12,39 @@ export function isPlainObject(val: any): val is Object {
   return toString.call(val) === '[object Object]'
 }
 
-export function parseHeaders(headers: string): any {
-  let parsed = Object.create(null)
-  if (!headers) return
-  headers.split('\r\n').forEach(line => {
-    let [key, val] = line.split(':')
-    key = key.trim().toLowerCase()
-    if (!key) return
-    if (val) val = val.trim()
-    parsed[key] = val
-  })
-  return parsed
-}
+
 export function isFormData(val: any): val is FormData {
   return typeof val !== 'undefined' && val instanceof FormData;
 }
 export function isURLSearchParams(val: any): val is URLSearchParams {
   return typeof val !== 'undefined' && val instanceof URLSearchParams;
 }
-export function extend<T, U>(to: T, from: U): T & U{
+
+export function extend <T, U>(to: T, from: U): T & U {
   for(const key in from){
-    ;(to as T & U)[key] = from[key] as any;
+    ;(to as T & U)[key] = from[key] as any
   }
-  return to as T & U
+  return to as T & U;
 }
+export function deepMerge(...objs: any[]): any {
+  const result = Object.create(null)
+
+  objs.forEach(obj => {
+    if(obj){
+      Object.keys(obj).forEach(key => {
+        const val = obj[key];
+        if(isPlainObject(val)){
+          if(isPlainObject(result[key])){
+            result[key] = deepMerge(result[key], val)
+          }else{
+            result[key] = deepMerge(val);
+          }
+        }else{
+          result[key] = val;
+        }
+      })
+    }
+  })
+  return result;
+}
+
