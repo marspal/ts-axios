@@ -7,21 +7,30 @@ import { parseHeaders } from '../helpers/headers'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
-    const { data = null, url, method = 'get',
-      headers, responseType, timeout,
-      cancelToken, withCredentials,
-      xsrfCookieName, xsrfHeaderName,
-      onDownloadProgress, onUploadProgress,
-      auth, validateStatus
+    const {
+      data = null,
+      url,
+      method = 'get',
+      headers,
+      responseType,
+      timeout,
+      cancelToken,
+      withCredentials,
+      xsrfCookieName,
+      xsrfHeaderName,
+      onDownloadProgress,
+      onUploadProgress,
+      auth,
+      validateStatus
     } = config
     const request = new XMLHttpRequest()
     request.open(method.toUpperCase(), url!, true)
-    configureRequest();
-    addEvents();
-    precessHeaders();
-    processCancel();
+    configureRequest()
+    addEvents()
+    precessHeaders()
+    processCancel()
     request.send(data)
-    function configureRequest(): void{
+    function configureRequest(): void {
       if (responseType) {
         // 设置响应数据的类型
         request.responseType = responseType
@@ -29,11 +38,11 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       if (timeout) {
         request.timeout = timeout
       }
-      if(withCredentials){
-        request.withCredentials = withCredentials;
+      if (withCredentials) {
+        request.withCredentials = withCredentials
       }
     }
-    function addEvents(): void{
+    function addEvents(): void {
       request.onreadystatechange = function handleload() {
         if (request.readyState !== 4) {
           return
@@ -61,27 +70,27 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       }
       request.ontimeout = function handleTimeout() {
         // reject(new Error(`timeout of ${timeout} ms exceeded`))
-        reject(createError('timeout of ${timeout} ms exceeded', config, 'ECONNABORTED', request))
+        reject(createError(`Timeout of ${timeout} ms exceeded`, config, 'ECONNABORTED', request))
       }
-      if(onDownloadProgress){
-        request.onprogress = onDownloadProgress;
+      if (onDownloadProgress) {
+        request.onprogress = onDownloadProgress
       }
-      if(onUploadProgress){
-        request.upload.onprogress = onUploadProgress;
+      if (onUploadProgress) {
+        request.upload.onprogress = onUploadProgress
       }
     }
     function precessHeaders(): void {
-      if(isFormData(data)){
+      if (isFormData(data)) {
         delete headers['Content-Type']
       }
-      if((withCredentials || isURLSameOrigin(url!)) && xsrfCookieName){
-        const xsrfValue = cookie.read(xsrfCookieName);
-        if(xsrfValue && xsrfHeaderName){
+      if ((withCredentials || isURLSameOrigin(url!)) && xsrfCookieName) {
+        const xsrfValue = cookie.read(xsrfCookieName)
+        if (xsrfValue && xsrfHeaderName) {
           request.setRequestHeader(xsrfHeaderName, xsrfValue)
         }
       }
-      if(auth){
-        headers['Authorization'] = "Basic " + btoa(auth.username + ':' +auth.password)
+      if (auth) {
+        headers['Authorization'] = 'Basic ' + btoa(auth.username + ':' + auth.password)
       }
       Object.keys(headers).forEach(name => {
         if (data === null && name.toLowerCase() === 'content-type') {
@@ -93,10 +102,10 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       })
     }
 
-    function processCancel(){
-      if(cancelToken){
-        cancelToken.promise.then((reason)=>{
-          request.abort();
+    function processCancel() {
+      if (cancelToken) {
+        cancelToken.promise.then(reason => {
+          request.abort()
           reject(reason)
         })
       }
@@ -108,7 +117,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         // reject(new Error(`Request failed width status code ${response.status}`))
         reject(
           createError(
-            `Request failed width status code ${response.status}`,
+            `Request failed with status code ${response.status}`,
             config,
             null,
             request,

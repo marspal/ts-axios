@@ -1,7 +1,7 @@
 import { isDate, isPlainObject, isURLSearchParams } from './util'
 interface URLOrigin {
-  protocol: string;
-  host: string;
+  protocol: string
+  host: string
 }
 function encode(val: string): string {
   return encodeURIComponent(val)
@@ -13,16 +13,20 @@ function encode(val: string): string {
     .replace(/%5B/gi, '[')
     .replace(/%5D/g, ']')
 }
-export function buildURL(url: string, params?: any, paramsSerializer?: (params: any) => string): string {
+export function buildURL(
+  url: string,
+  params?: any,
+  paramsSerializer?: (params: any) => string
+): string {
   if (!params) {
     return url
   }
   let serializedParams
-  if(paramsSerializer){
+  if (paramsSerializer) {
     serializedParams = paramsSerializer(params)
-  } else if(isURLSearchParams(params)){
+  } else if (isURLSearchParams(params)) {
     serializedParams = params.toString()
-  }else {
+  } else {
     const parts: string[] = []
     Object.keys(params).forEach(key => {
       const val = params[key]
@@ -58,24 +62,24 @@ export function buildURL(url: string, params?: any, paramsSerializer?: (params: 
   return url
 }
 
-export function isAbsoluteURL(url: string): boolean{
-  return /(^[a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
+export function isAbsoluteURL(url: string): boolean {
+  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
 }
-export function combineURL(baseURL: string, relativeURL: string): string{
-  return relativeURL? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, ''):baseURL;
-}
-
-export function isURLSameOrigin(requestURL: string): boolean{
-  const parsedOrigin = resolveURL(requestURL);
-  return (parsedOrigin.host === currentOrigin.host
-    && currentOrigin.protocol === parsedOrigin.protocol)
+export function combineURL(baseURL: string, relativeURL: string): string {
+  return relativeURL ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') : baseURL
 }
 
+export function isURLSameOrigin(requestURL: string): boolean {
+  const parsedOrigin = resolveURL(requestURL)
+  return (
+    parsedOrigin.host === currentOrigin.host && currentOrigin.protocol === parsedOrigin.protocol
+  )
+}
 
-const usrParsingNode = document.createElement('a');
-const currentOrigin = resolveURL(document.location.href);
-function resolveURL(url: string): URLOrigin{
-  usrParsingNode.setAttribute("href", url);
-  const {protocol, host} = usrParsingNode;
-  return {protocol, host}
+const useParsingNode = document.createElement('a')
+const currentOrigin = resolveURL(document.location.href)
+function resolveURL(url: string): URLOrigin {
+  useParsingNode.setAttribute('href', url)
+  const { protocol, host } = useParsingNode
+  return { protocol, host }
 }
