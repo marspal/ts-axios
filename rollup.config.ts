@@ -7,11 +7,11 @@ import json from 'rollup-plugin-json'
 
 const pkg = require('./package.json')
 
-const libraryName = 'ts-axios'
+const libraryName = 'axios'
 
 export default {
   // input: `src/${libraryName}.ts`,
-  input: `src/index.ts`,
+  input: 'src/index.ts',
   output: [
     { file: pkg.main, name: camelCase(libraryName), format: 'umd', sourcemap: true },
     { file: pkg.module, format: 'es', sourcemap: true },
@@ -24,7 +24,7 @@ export default {
   plugins: [
     // Allow json resolution
     json(),
-    // Compile TypeScript files
+    // Compile TypeScript files，使用tsconfig declarationDir文件
     typescript({ useTsconfigDeclarationDir: true }),
     // Allow bundling cjs modules (unlike webpack, rollup doesn't understand cjs)
     commonjs(),
