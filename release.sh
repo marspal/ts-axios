@@ -17,7 +17,7 @@ then
   npm version $VERSION --message "[release] $VERSION"
   git push origin master
 
-  # publish  发布files 下的dist目录
+  # publish  发布package.json files 下的dist目录
   npm publish
 
 fi

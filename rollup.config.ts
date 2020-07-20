@@ -17,8 +17,8 @@ export default {
     { file: pkg.module, format: 'es', sourcemap: true },
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: [],
-  watch: {
+  external: [], // 不需要打包 第三方库
+  watch: { // 开启监控模式 --watch有效
     include: 'src/**',
   },
   plugins: [
