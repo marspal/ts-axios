@@ -2,6 +2,12 @@
 
 ``简介:`` ts重构axios, 更深入的了解XMLHttpRequest
 
+> 使用
+
+```
+  npm i ts-axios-xmq
+```
+
 ## table of content
 
 > 主要实现功能
@@ -14,7 +20,14 @@
 - 配置化实现
 - 取消功能实现
 - 更多功能
-- 打包部署实现
+
+> 学到的知识点？
+- 脚手架搭建?
+- Promise链式调用?
+- 拦截器的设计与使用?
+- 测试如何使用?
+- 打包发布?
+
 
 > 主要的 npm 包
 
@@ -50,6 +63,37 @@ cd YOURFOLDERNAME
 # Run npm install and write your library name when asked. That's all!
 npm install
 ```
+> 创建入口文件，types文件简单实现xhr发送功能
+
+> 创建demo 运行环境的包（example）
+
+> 重点包学习, 使用时需要阅读更多的配置文件
+- webpack-dev-middleware: 
+注意: This should be used for development only
+benefits:
+1. No files are written to disk, rather it handles files in memory;
+2. If files changed in watch mode, the middleware delays requests until compiling has completed.
+3. Supports hot module reload: 
+Webpack hot reloading using only webpack-dev-middleware. This allows you to add hot reloading into an existing server without webpack-dev-server.
+
+```js
+  // 使用 注意: 在webpack配置文件中 output: publicPath 也使用相同的
+  app.use(webpackDevMiddleware(compiler, {
+      publicPath: "/__build__/",
+      stats: {
+          colors: true, // Tells stats whether to output in the different colors.
+          chunks: false
+      },
+  }));
+```
+- webpack-hot-middleware
+
+
+
+
+
+### 打包部署
+
 
 ### 基础知识
 
@@ -75,4 +119,15 @@ npm install
 3. null, undefined 
 
 null、undefined 可以是类型 可以是值; null不能赋值给number、string
+
+> git 相关
+
+1. 创建工程并关联到远程分支
+- 查看远程分支: git remote -v
+- 关联远程分支: git remote add origin git@url
+- 拉取远程分支: git pull origin master
+- git branch: 查看当前分支
+- git add
+- npm run commit: 调用commitizen
+
 
