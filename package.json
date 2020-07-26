@@ -5,7 +5,7 @@
     "keywords": [],
     "main": "dist/axios.umd.js",
     "module": "dist/axios.es5.js",
-    "typings": "dist/types/ts-axios.d.ts",
+    "typings": "dist/types/axios.d.ts",
     "files": [
         "dist"
     ],
