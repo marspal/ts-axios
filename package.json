@@ -1,6 +1,6 @@
 {
     "name": "ts-axios-xmq",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "",
     "keywords": [],
     "main": "dist/axios.umd.js",
@@ -22,7 +22,7 @@
         "dev": "node example/server.js",
         "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
         "prebuild": "rimraf dist",
-        "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
+        "build": "tsc -m commonjs && rollup -c rollup.config.ts --target es6",
         "start": "rollup -c rollup.config.ts -w",
         "test": "jest --coverage",
         "test:watch": "jest --coverage --watch",
@@ -35,7 +35,7 @@
         "precommit": "lint-staged",
         "travis-deploy-once": "travis-deploy-once",
         "prepub": "npm run test:prod && npm run build",
-        "pub": "sh  release.sh"
+        "pub": "sh release.sh"
     },
     "lint-staged": {
         "{src,test}/**/*.ts": [
@@ -65,10 +65,10 @@
         ],
         "coverageThreshold": {
             "global": {
-                "branches": 90,
-                "functions": 95,
-                "lines": 95,
-                "statements": 95
+                "branches": 50,
+                "functions": 55,
+                "lines": 55,
+                "statements": 55
             }
         },
         "collectCoverageFrom": [
