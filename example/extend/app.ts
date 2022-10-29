@@ -1,14 +1,14 @@
 import axios from '../../src/index'
 
-interface ResponseData<T=any>{
-  code: number;
-  result: T;
-  message: string;
+interface ResponseData<T = any> {
+  code: number
+  result: T
+  message: string
 }
 
 interface User {
-  name: string;
-  age: number;
+  name: string
+  age: number
 }
 
 function getUser<T>() {
@@ -17,16 +17,14 @@ function getUser<T>() {
     .catch(err => console.log(err))
 }
 
-async function test(){
-  const user = await getUser<User>();
-  if(
-    user
-  ){
+async function test() {
+  const user = await getUser<User>()
+  if (user) {
     console.log(user.result.name)
   }
 }
 
-test();
+test()
 
 axios({
   url: '/extend/post',
@@ -51,15 +49,11 @@ axios.request({
   }
 })
 
-
 axios.get('/extend/get')
 axios.options('/extend/options')
 axios.delete('/extend/delete')
 axios.head('/extend/head')
 
-axios.post('/extend/post', {msg: 'post'})
-axios.post('/extend/put', {msg: 'put'})
-axios.post('/extend/patch', {msg: 'patch'})
-
-let num: number = null;
-console.log(num);
+axios.post('/extend/post', { msg: 'post' })
+axios.post('/extend/put', { msg: 'put' })
+axios.post('/extend/patch', { msg: 'patch' })

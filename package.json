@@ -12,7 +12,7 @@
   "author": "小权 <597141997@qq.com>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/marspal/ts-axios.git"
   },
   "license": "MIT",
   "engines": {
@@ -52,6 +52,7 @@
     "transform": {
       ".(ts|tsx)": "ts-jest"
     },
+    "verbose": true,
     "testEnvironment": "jsdom",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
@@ -65,10 +66,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 50,
-        "functions": 55,
-        "lines": 55,
-        "statements": 55
+        "branches": 90,
+        "functions": 95,
+        "lines": 95,
+        "statements": 95
       }
     },
     "collectCoverageFrom": [

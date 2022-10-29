@@ -1,5 +1,7 @@
-import axios, { AxiosResponse, AxiosError } from '../src/index'
+import axios, { AxiosResponse } from '../src'
+import { AxiosError } from '../src/helpers/error'
 import { getAjaxRequest, TestResponses } from './helper'
+
 describe('requests', () => {
   beforeEach(() => {
     jasmine.Ajax.install()
@@ -7,6 +9,7 @@ describe('requests', () => {
   afterEach(() => {
     jasmine.Ajax.uninstall()
   })
+
   it('should treat single string arg as url', () => {
     axios('/foo')
     return getAjaxRequest().then(request => {
@@ -18,11 +21,9 @@ describe('requests', () => {
     axios({
       url: '/foo',
       method: 'POST'
-    }).then(response => {
-      // 因为 delete 就是小写的
-      expect(response.config.method).toBe('post')
-      expect(response.data).toEqual(JSON.parse(TestResponses.search.success.responseText))
-      // expect(1).toBe(2)
+    }).then(resopnse => {
+      expect(resopnse.config.method).toBe('post')
+      expect(resopnse.data).toEqual(JSON.parse(TestResponses.search.success.responseText))
     })
     return getAjaxRequest().then(resquest => {
       resquest.respondWith(TestResponses.search.success)
@@ -32,11 +33,9 @@ describe('requests', () => {
     const resolveSpy = jest.fn((res: AxiosResponse) => {
       return res
     })
-
     const rejectSpy = jest.fn((e: AxiosError) => {
       return e
     })
-
     jasmine.Ajax.uninstall()
     return axios('/foo')
       .then(resolveSpy)
@@ -47,15 +46,13 @@ describe('requests', () => {
       expect(resolveSpy).not.toHaveBeenCalled()
       expect(rejectSpy).toHaveBeenCalled()
       expect(reason instanceof Error).toBeTruthy()
-      expect((reason as AxiosError).message).toEqual('Network Error')
+      expect((reason as AxiosError).message).toBe('Request failed with status code 404')
       expect(reason.request).toEqual(expect.any(XMLHttpRequest))
-      // afterEach 都要加.uninstall()
       jasmine.Ajax.install()
     }
   })
   it('should reject when request timeout', done => {
     let err: AxiosError
-
     axios('/foo', {
       timeout: 2000,
       method: 'post'
@@ -81,24 +78,20 @@ describe('requests', () => {
     })
 
     axios('/foo', {
-      validateStatus(status) {
+      validateStatus: status => {
         return status !== 500
       }
     })
       .then(resolveSpy)
       .catch(rejectSpy)
       .then(next)
-    return getAjaxRequest().then(request => {
-      request.respondWith({
-        status: 500
-      })
-    })
+
     function next(reason: AxiosError | AxiosResponse) {
-      expect(resolveSpy).not.toHaveBeenCalled()
-      expect(rejectSpy).toHaveBeenCalled()
+      expect(rejectSpy).not.toBeCalled()
+      expect(resolveSpy).toBeCalled()
       expect(reason instanceof Error).toBeTruthy()
       expect((reason as AxiosError).message).toBe('Request failed with status code 500')
-      expect((reason as AxiosError).response.status).toBe(500)
+      expect((reason as AxiosError).code).toBe(500)
     }
   })
   it('should resolve when validateStatus returns true', () => {
@@ -108,24 +101,25 @@ describe('requests', () => {
     const rejectSpy = jest.fn((e: AxiosError) => {
       return e
     })
+
     axios('/foo', {
-      validateStatus(status) {
+      validateStatus: status => {
         return status === 500
       }
     })
       .then(resolveSpy)
       .catch(rejectSpy)
       .then(next)
+    function next(reason: AxiosError | AxiosResponse) {
+      expect(resolveSpy).toBeCalled()
+      expect(rejectSpy).not.toBeCalled()
+      expect(reason.config.url).toBe('/foo')
+    }
     return getAjaxRequest().then(request => {
       request.respondWith({
         status: 500
       })
     })
-    function next(res: AxiosError | AxiosResponse) {
-      expect(resolveSpy).toHaveBeenCalled()
-      expect(rejectSpy).not.toHaveBeenCalled()
-      expect(res.config.url).toBe('/foo')
-    }
   })
   it('should return JSON when resolved', done => {
     let response: AxiosResponse
@@ -149,7 +143,10 @@ describe('requests', () => {
       })
     })
     setTimeout(() => {
-      expect(response.data).toEqual({ errno: 0 })
+      expect(response.status).toBe(200)
+      expect(response.data).toEqual({
+        errno: 0
+      })
       done()
     }, 100)
   })

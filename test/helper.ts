@@ -8,9 +8,9 @@ export const TestResponses = {
   }
 }
 export function getAjaxRequest(): Promise<JasmineAjaxRequest> {
-  return new Promise(function(resolve) {
+  return new Promise(resolve => {
     setTimeout(() => {
-      return resolve(jasmine.Ajax.requests.mostRecent())
+      resolve(jasmine.Ajax.requests.mostRecent())
     }, 0)
   })
 }

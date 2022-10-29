@@ -26,6 +26,7 @@ export function parseHeaders(headers: string): any {
   let parsed = Object.create(null)
   if (!headers) return parsed
   headers.split('\r\n').forEach(line => {
+    // 解决value数据还存在:符号的情况
     let [key, ...vals] = line.split(':')
     key = key.trim().toLowerCase()
     if (!key) return
@@ -39,7 +40,7 @@ export function flattenHeaders(headers: any, method: Method): any {
   if (!headers) {
     return headers
   }
-  headers = deepMerge(headers.common, headers[method], headers)
+  headers = deepMerge(headers.common, headers[method.toLowerCase()], headers)
   const methodsToDelete = ['delete', 'get', 'head', 'options', 'post', 'put', 'patch', 'common']
   methodsToDelete.forEach(method => {
     delete headers[method]

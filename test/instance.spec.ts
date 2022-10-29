@@ -1,5 +1,7 @@
-import axios, { AxiosResponse, AxiosRequestConfig } from '../src/index'
+import { request } from 'http'
+import axios, { AxiosResponse } from '../src'
 import { getAjaxRequest } from './helper'
+
 describe('instance', () => {
   beforeEach(() => {
     jasmine.Ajax.install()
@@ -9,6 +11,7 @@ describe('instance', () => {
   })
   it('should make a http request without verb helper', () => {
     const instance = axios.create()
+
     instance('/foo')
     return getAjaxRequest().then(request => {
       expect(request.url).toBe('/foo')
@@ -35,6 +38,7 @@ describe('instance', () => {
     instance.put('/foo')
     return getAjaxRequest().then(request => {
       expect(request.method).toBe('PUT')
+      expect(request.url).toBe('/foo')
     })
   })
   it('should make a patch request', () => {
@@ -73,7 +77,7 @@ describe('instance', () => {
     })
   })
   it('should have defaults headers', () => {
-    const instance = axios.create({ baseURL: 'https://api.example.com' })
+    const instance = axios.create()
     expect(typeof instance.defaults.headers).toBe('object')
     expect(typeof instance.defaults.headers.common).toBe('object')
   })
@@ -99,22 +103,9 @@ describe('instance', () => {
       setTimeout(() => {
         expect(response.config.timeout).toBe(0)
         expect(response.config.withCredentials).toBeTruthy()
+        expect(response.status).toBe(200)
         done()
       }, 100)
     })
-  })
-  it('should get the computed uri', () => {
-    const fakeConfig: AxiosRequestConfig = {
-      baseURL: 'https://www.baidu.com/',
-      url: '/user/12345',
-      params: {
-        idClient: 1,
-        idTest: 2,
-        testString: 'thisIsATest'
-      }
-    }
-    expect(axios.getUri(fakeConfig)).toBe(
-      'https://www.baidu.com/user/12345?idClient=1&idTest=2&testString=thisIsATest'
-    )
   })
 })

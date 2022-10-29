@@ -1,5 +1,6 @@
-import { parseHeaders, processHeaders, flattenHeaders } from '../../src/helpers/headers'
-describe('helpers: headers', () => {
+import { flattenHeaders, parseHeaders, processHeaders } from '../../src/helpers/headers'
+
+describe('helper: headers', () => {
   describe('parseHeaders', () => {
     it('should parse headers', () => {
       const parsed = parseHeaders(
@@ -10,7 +11,6 @@ describe('helpers: headers', () => {
           ':aa\r\n' +
           'key:'
       )
-
       expect(parsed['content-type']).toBe('application/json')
       expect(parsed['connection']).toBe('keep-alive')
       expect(parsed['transfer-encoding']).toBe('chunked')
@@ -33,16 +33,11 @@ describe('helpers: headers', () => {
       expect(headers['Content-length']).toBe(1024)
     })
     it('should set Content-Type if not set and data is PlainObject', () => {
-      const headers = {}
+      const headers: any = {}
       processHeaders(headers, { a: 1 })
       expect(headers['Content-Type']).toBe('application/json;charset=utf-8')
     })
-    it('should not set Content-Type if not set and data is not PlainObject', () => {
-      const headers: any = {}
-      processHeaders(headers, new URLSearchParams('a=b'))
-      expect(headers['Content-Type']).toBeUndefined()
-    })
-    it('should do nothing if headers is undefined or null', () => {
+    it('should do nothing if headers is  undefined or null', () => {
       expect(processHeaders(undefined, {})).toBeUndefined()
       expect(processHeaders(null, {})).toBeNull()
     })
@@ -61,11 +56,19 @@ describe('helpers: headers', () => {
           'X-POST-HEADER': 'postHeaderValue'
         }
       }
-      expect(flattenHeaders(headers, 'get')).toEqual({
+
+      expect(flattenHeaders(headers, 'GET')).toEqual({
         Accept: 'application/json',
         'X-COMMON-HEADER': 'commonHeaderValue',
         'X-GET-HEADER': 'getHeaderValue'
       })
+
+      expect(flattenHeaders(headers, 'get')['get']).toBeUndefined()
+    })
+    it('should do nothing when headers is undefined or null', () => {
+      expect(flattenHeaders(undefined, 'GET')).toBeUndefined()
+      expect(flattenHeaders(null, 'GET')).toBeNull()
+      expect(flattenHeaders('', 'GET')).toBe('')
     })
   })
 })

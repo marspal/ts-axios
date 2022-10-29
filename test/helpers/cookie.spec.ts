@@ -1,12 +1,11 @@
 import cookie from '../../src/helpers/cookie'
-
-describe('helpers: cookie', () => {
-  it('should read cookies', () => {
-    document.cookie = 'bar=baz'
-    expect(cookie.read('bar')).toBe('baz')
+describe('helper:cookie', () => {
+  it('should read cookie', () => {
+    document.cookie = 'foo=baz'
+    expect(cookie.read('foo')).toBe('baz')
   })
-  it('should return null if cookie name is not exist', () => {
-    document.cookie = 'bar=baz'
-    expect(cookie.read('foo')).toBeNull()
+  it('should be return null if cookie is not exists', () => {
+    document.cookie = 'foo=baz'
+    expect(cookie.read('baz')).toBeNull()
   })
 })

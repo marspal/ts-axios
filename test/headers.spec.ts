@@ -1,6 +1,6 @@
-// 逻辑上测试headers
-import axios from '../src/index'
+import axios from '../src'
 import { getAjaxRequest } from './helper'
+
 function testHeaderValue(headers: any, key: string, val?: string): void {
   let found = false
 
@@ -27,6 +27,7 @@ describe('headers', () => {
   afterEach(() => {
     jasmine.Ajax.uninstall()
   })
+
   it('should use default common headers', () => {
     const headers = axios.defaults.headers.common
     axios('/foo')
@@ -51,27 +52,6 @@ describe('headers', () => {
     })
     return getAjaxRequest().then(request => {
       testHeaderValue(request.requestHeaders, 'Content-Type', 'application/json;charset=utf-8')
-    })
-  })
-  it('should remove content-type id data is mepty', () => {
-    axios.post('/foo')
-    return getAjaxRequest().then(request => {
-      testHeaderValue(request.requestHeaders, 'Content-Type', undefined)
-    })
-  })
-  it('should preserve content-type if data is false', () => {
-    axios.post('/foo', false)
-
-    return getAjaxRequest().then(request => {
-      testHeaderValue(request.requestHeaders, 'Content-Type', 'application/x-www-form-urlencoded')
-    })
-  })
-  it('should remove content-type id data is FormData', () => {
-    const data = new FormData()
-    data.append('foo', 'bar')
-    axios.post('/foo', data)
-    return getAjaxRequest().then(request => {
-      testHeaderValue(request.requestHeaders, 'Content-Type', undefined)
     })
   })
 })

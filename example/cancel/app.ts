@@ -1,40 +1,50 @@
-import axios, { Canceler } from '../../src/index';
+import axios, { Canceler } from '../../src/index'
 
 const CancelToken = axios.CancelToken
-const source = CancelToken.source();
+const source = CancelToken.source()
 
-axios.get('/cancel/get', {
-  cancelToken: source.token
-}).catch(e=>{
-  if(axios.isCancel(e)){
-    console.log('Request canceled', e.message);
-  }
-})
-
-setTimeout(()=>{
-  source.cancel('Operation canceled by the user');
-  axios.post('/cancel/post', {data: 1}, {
+axios
+  .get('/cancel/get', {
     cancelToken: source.token
-  }).catch(e => {
-    if(axios.isCancel(e)){
-      console.log(e.message)
+  })
+  .catch(e => {
+    if (axios.isCancel(e)) {
+      console.log('Request canceled', e.message)
     }
   })
+
+setTimeout(() => {
+  source.cancel('Operation canceled by the user')
+  axios
+    .post(
+      '/cancel/post',
+      { data: 1 },
+      {
+        cancelToken: source.token
+      }
+    )
+    .catch(e => {
+      if (axios.isCancel(e)) {
+        console.log(e.message)
+      }
+    })
 }, 100)
 
+// let cancel: Canceler
 
-let cancel: Canceler
+// axios
+//   .get('/cancel/get', {
+//     cancelToken: new CancelToken(c => {
+//       cancel = c
+//     })
+//   })
+//   .catch(e => {
+//     console.log(e.message)
+//     if (axios.isCancel(e)) {
+//       console.log('Request canceled')
+//     }
+//   })
 
-axios.get('/cancel/get', {
-  cancelToken: new CancelToken((c) => {
-    cancel = c;
-  })
-}).catch((e) => {
-  if(axios.isCancel(e)){
-    console.log("Request canceled")
-  }
-})
-
-setTimeout(()=>{
-  cancel()
-}, 200)
+// setTimeout(() => {
+//   cancel()
+// }, 200)

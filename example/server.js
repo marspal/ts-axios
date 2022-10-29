@@ -40,7 +40,7 @@ app.use(router);
 
 const port = process.env.PORT || 8080;
 module.exports = app.listen(port, () => {
-    console.log(`server listner on http: //localhost: ${port}`);
+    console.log(`server listner on http://localhost:${port}`);
 })
 
 function registerSimpleRouter() {
@@ -137,6 +137,7 @@ function registerInterceptorRouter() {
 
 function registerConfigRouter() {
     router.post('/config/post', function(req, res) {
+        console.log(req.body);
         res.json(req.body)
     })
 }

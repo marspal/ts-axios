@@ -53,6 +53,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         }
         const responseHeaders = request.getAllResponseHeaders()
         const responseData = responseType !== 'text' ? request.response : request.responseText
+
         const response: AxiosResponse = {
           data: responseData,
           headers: parseHeaders(responseHeaders),
@@ -104,10 +105,17 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
     function processCancel() {
       if (cancelToken) {
-        cancelToken.promise.then(reason => {
-          request.abort()
-          reject(reason)
-        })
+        cancelToken.promise
+          .then(reason => {
+            request.abort()
+            reject(reason)
+          })
+          .catch(
+            /* istanbul ignore next*/
+            () => {
+              // do nothing  忽略测试用例
+            }
+          )
       }
     }
     function handleResponse(response: AxiosResponse): void {

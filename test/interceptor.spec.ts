@@ -1,7 +1,7 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from '../src/index'
+import axios, { AxiosResponse } from '../src'
 import { getAjaxRequest } from './helper'
 
-describe('interceptors', () => {
+describe('interceptor', () => {
   beforeEach(() => {
     jasmine.Ajax.install()
   })
@@ -31,25 +31,26 @@ describe('interceptors', () => {
     return getAjaxRequest().then(request => {
       expect(request.method).toBe('POST')
       expect(request.url).toBe('/bar')
+      expect(request.requestHeaders['Content-Type']).toBeUndefined()
     })
   })
   it('should add a request interceptor that returns a promise', done => {
     const instance = axios.create()
-    instance.interceptors.request.use((config: AxiosRequestConfig) => {
-      return new Promise(resolve => {
+    instance.interceptors.request.use(config => {
+      return new Promise(resovle => {
         setTimeout(() => {
           config.headers.async = 'promise'
-          resolve(config)
+          resovle(config)
         }, 10)
       })
     })
     instance('/foo')
     setTimeout(() => {
       getAjaxRequest().then(request => {
-        expect(request.requestHeaders.async).toBe('promise')
+        expect(request.requestHeaders['async']).toBe('promise')
         done()
       })
-    }, 20)
+    }, 30)
   })
   it('add multiple request interceptors', () => {
     const instance = axios.create()
@@ -79,9 +80,9 @@ describe('interceptors', () => {
     let response: AxiosResponse
     const instance = axios.create()
 
-    instance.interceptors.response.use(data => {
-      data.data = data.data + ' - modified by interceptor'
-      return data
+    instance.interceptors.response.use(res => {
+      res.data = res.data + ' - modified by interceptor'
+      return res
     })
 
     instance('/foo').then(data => {
@@ -136,7 +137,6 @@ describe('interceptors', () => {
       }, 100)
     })
   })
-
   it('should add a response interceptor that returns a promise', done => {
     let response: AxiosResponse
     const instance = axios.create()

@@ -1,16 +1,16 @@
 import { buildURL, combineURL, isAbsoluteURL, isURLSameOrigin } from '../../src/helpers/url'
 
-describe('helpers: url', () => {
-  describe('buildUrl', () => {
+describe('helper:url', () => {
+  describe('buildURL', () => {
     it('should support null params', () => {
       expect(buildURL('/foo')).toBe('/foo')
     })
     it('should support params', () => {
       expect(buildURL('/foo', { foo: 'bar' })).toBe('/foo?foo=bar')
     })
-    it('shuld ignore if some params value is null', () => {
+    it('should ignore is some params value is null', () => {
       const params = { foo: 'bar', bar: null }
-      expect(buildURL('/foo', params)).toBe('/foo?foo=bar')
+      expect(buildURL('/for', params)).toBe('/for?foo=bar')
     })
     it('should ignore if the only param value is null', () => {
       expect(buildURL('/bar', { foo: null })).toBe('/bar')
@@ -26,7 +26,7 @@ describe('helpers: url', () => {
         buildURL('/bar', {
           date
         })
-      ).toBe('/bar?date=' + date.toISOString())
+      ).toBe(`/bar?date=${date.toISOString()}`)
     })
     it('should support array params', () => {
       expect(
@@ -68,27 +68,20 @@ describe('helpers: url', () => {
       expect(serializer).toBeCalled()
       expect(serializer).toBeCalledWith(params)
     })
-    it('should support URLSearchParams', () => {
-      expect(buildURL('/foo', new URLSearchParams('bar=baz'))).toBe('/foo?bar=baz')
-    })
   })
   describe('combineURL', () => {
     it('should combine URL', () => {
       expect(combineURL('https://api.github.com', '/users')).toBe('https://api.github.com/users')
     })
-
     it('should remove duplicate slashes', () => {
       expect(combineURL('https://api.github.com/', '/users')).toBe('https://api.github.com/users')
     })
-
     it('should insert missing slash', () => {
       expect(combineURL('https://api.github.com', 'users')).toBe('https://api.github.com/users')
     })
-
     it('should not insert slash when relative url missing/empty', () => {
       expect(combineURL('https://api.github.com/users', '')).toBe('https://api.github.com/users')
     })
-
     it('should allow a single slash for relative url', () => {
       expect(combineURL('https://api.github.com/users', '/')).toBe('https://api.github.com/users/')
     })
@@ -98,11 +91,9 @@ describe('helpers: url', () => {
       expect(isAbsoluteURL('123://example.com/')).toBeFalsy()
       expect(isAbsoluteURL('!valid://example.com/')).toBeFalsy()
     })
-
     it('should return true if URL is protocol-relative', () => {
       expect(isAbsoluteURL('//example.com/')).toBeTruthy()
     })
-
     it('should return false if URL is relative', () => {
       expect(isAbsoluteURL('/foo')).toBeFalsy()
       expect(isAbsoluteURL('foo')).toBeFalsy()
