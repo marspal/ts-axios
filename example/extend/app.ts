@@ -12,9 +12,14 @@ interface User {
 }
 
 function getUser<T>() {
-  return axios<ResponseData<T>>('/extend/user')
+  return axios
+    .get<ResponseData<T>>('/extend/user')
     .then(res => res.data)
     .catch(err => console.log(err))
+
+  // return axios<ResponseData<T>>('/extend/user')
+  //   .then(res => res.data)
+  //   .catch(err => console.log(err))
 }
 
 async function test() {

@@ -22,7 +22,7 @@
     "dev": "node example/server.js",
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "tsc -m commonjs && rollup -c rollup.config.ts --target es6",
+    "build": "tsc -m es6 && rollup -c rollup.config.ts --target es6",
     "start": "rollup -c rollup.config.ts -w",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
